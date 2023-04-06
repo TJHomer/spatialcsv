@@ -9,7 +9,7 @@
 
 
 -   Free software: GNU General Public License v3
--   Documentation: https://TJHomer.github.io/spatialcsv
+-   Documentation: https://tjhomer.github.io/spatialcsv/
     
 
 ## Features
