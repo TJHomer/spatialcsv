@@ -9,13 +9,25 @@ import csv
 
 
 class Locations(object):
+    """Inputs a csv with locational data and outputs the proper format to import into a webmap"""
+
     def __init__(self, csv, lat=None, long=None, **kwargs):
+        """
+        Keyword arguments:
+        csv -- the filepath to the csv file. It is assumed that the delimiter is ','
+        lat -- the column header name of the latitude values
+        long -- the column header name of the longitude values
+        """
         self.csv = csv
         self.lat = lat
         self.long = long
 
 
     def checks(self):
+        """
+        Checks to make sure file exists, has a header, 
+        the lat and long variables exist in the header
+        """
         with open(self.csv, 'r') as csvfile:
             head = csv.Sniffer().has_header(csvfile.read(1024))
                 
@@ -23,10 +35,9 @@ class Locations(object):
                 pass
             else:
                 print("This csv file does not seem to have a header. Please add column names in the top line of the csv.")
-        '''
-        except FileNotFoundError:
-            print(f"File {self.csv} not found.")
-        '''
+        
+        # add exception  FileNotFoundError:
+        
         if self.lat in self.header():
             pass
         else:
@@ -39,6 +50,7 @@ class Locations(object):
 
 
     def header(self):
+        """Returns header row"""
         with open(self.csv) as csvfile:
             reader = csv.DictReader(csvfile)
             header = reader.fieldnames
@@ -47,5 +59,3 @@ class Locations(object):
 
 
 
-c = Locations('us-state-capitals.csv', lat='latitude', long='longitude')
-c.checks()
