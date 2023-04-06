@@ -14,8 +14,10 @@ class Locations(object):
         self.lat = lat
         self.long = long
 
-        with open(self.csv, newline='') as csvfile:
-            head = csv.Sniffer().has_header(csvfile.read())
+
+    def checks(self):
+        with open(self.csv, 'r') as csvfile:
+            head = csv.Sniffer().has_header(csvfile.read(1024))
                 
             if head:
                 pass
@@ -33,16 +35,17 @@ class Locations(object):
             pass
         else:
             print(f"The value '{self.long}' is not in the header.")
-        print("looks good")
+        print("done")
 
 
     def header(self):
         with open(self.csv) as csvfile:
             reader = csv.DictReader(csvfile)
             header = reader.fieldnames
-            #print(list(header))
+            print(list(header))
             return header
 
 
 
-m = Locations('us-state-capitals.csv', lat='latitude', long='longitude')
+c = Locations('us-state-capitals.csv', lat='latitude', long='longitude')
+c.checks()
