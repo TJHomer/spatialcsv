@@ -14,7 +14,7 @@
 
 ## Features
 
--   TODO
+-   Will take a csv with Latitude and Longitude columns and add to a web map
 
 ## Credits
 
