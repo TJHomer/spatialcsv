@@ -8,7 +8,7 @@ import csv
 
 
 
-class Locations(object):
+class Locations:
     """Inputs a csv with locational data and outputs the proper format to import into a webmap"""
 
     def __init__(self, csv, lat=None, long=None, **kwargs):
