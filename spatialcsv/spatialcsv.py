@@ -242,7 +242,7 @@ class Map(ipyleaflet.Map):
         self.add_geojson(geojson, name=name, **kwargs)
 
 
-    def add_geodf(self, data, name='GeoDataFrame', **kwargs)
+    def add_geodf(self, data, name='GeoDataFrame', **kwargs):
         """Adds a GeoDataFrame to the map
         
         Args:
