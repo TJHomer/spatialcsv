@@ -76,8 +76,6 @@ class Locations:
 
 
 
-l = Locations('/home/thomer/School/Software_Design_GEOG422/Repo/spatialcsv/spatialcsv/us-state-capitals.csv', 'latitude', 'longitude')
-l.check_lat_long()
 
 class Map(ipyleaflet.Map):
     
