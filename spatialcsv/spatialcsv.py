@@ -63,7 +63,7 @@ class Locations:
                     except ValueError:
                         print(f"'{item}' on line {line} is not a valid entry")
                     if float(item) > 180 or float(item) < -180:
-                        print(f"'{item}' on line {line} is out of scope")
+                        print(f"'{item}' on line {line} is out of range")
 
 
 

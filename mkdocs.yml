@@ -47,9 +47,12 @@ nav:
     - Examples:
           - examples/example.ipynb
           - examples/add_csv.ipynb
+          - examples/folium.ipynb
+          - examples/vectors.ipynb
     - Contributing: contributing.md
     - FAQ: faq.md
     - Changelog: changelog.md
     - Report Issues: https://github.com/TJHomer/spatialcsv/issues
     - API Reference:
           - spatialcsv module: spatialcsv.md
+          - spatialfolium module: spatialfolium.md
