@@ -1,12 +1,8 @@
 """Main module."""
-import pandas as pd
+import os
 import csv
 import ipyleaflet
 import xyzservices.providers as xyz
-
-#def import_csv(filepath, skip=none, delimiters=','):
- #   pass
-
 
 
 class Locations:
@@ -22,6 +18,7 @@ class Locations:
         self.csv = csv
         self.lat = lat
         self.long = long
+        self.checks()
 
 
     def checks(self):
@@ -29,6 +26,9 @@ class Locations:
         Checks to make sure file exists, has a header, 
         the lat and long variables exist in the header
         """
+        
+        if not os.path.isfile(self.csv):
+            raise FileNotFoundError("This is not a valid filepath")
         with open(self.csv, 'r') as csvfile:
             head = csv.Sniffer().has_header(csvfile.read(1024))
                 
@@ -36,9 +36,8 @@ class Locations:
                 pass
             else:
                 print("This csv file does not seem to have a header. Please add column names in the top line of the csv.")
-        
-        # add exception  FileNotFoundError:
-        
+                        
+       
         if self.lat in self.header():
             pass
         else:
@@ -49,32 +48,141 @@ class Locations:
             print(f"The value '{self.long}' is not in the header.")
         print("done")
 
+    def check_lat_long(self):
+        """Checks to make sure latitude and longitude columns are acceptable values"""
+        header = self.header()
+        lat_pl = header.index(self.lat)
+        long_pl = header.index(self.long)
+        with open(self.csv, 'r') as file:
+            csv_reader = csv.reader(file)
+            header = next(file)
+            for line in csv_reader:
+                for item in [line[lat_pl], line[long_pl]]:
+                    try:
+                        float(item)
+                    except ValueError:
+                        print(f"'{item}' on line {line} is not a valid entry")
+                    if float(item) > 180 or float(item) < -180:
+                        print(f"'{item}' on line {line} is out of scope")
+
+
 
     def header(self):
         """Returns header row"""
         with open(self.csv) as csvfile:
             reader = csv.DictReader(csvfile)
             header = reader.fieldnames
-            print(list(header))
             return header
 
 
+
+l = Locations('/home/thomer/School/Software_Design_GEOG422/Repo/spatialcsv/spatialcsv/us-state-capitals.csv', 'latitude', 'longitude')
+l.check_lat_long()
+
 class Map(ipyleaflet.Map):
     
-    def __init__(self, **kwargs):
-        #self.bbox = bbox
-        #self.csv = csv
+    def __init__(self, center=[20, 0], zoom=2, **kwargs) -> None:
 
+        if "scroll_wheel_zoom" not in kwargs:
+            kwargs["scroll_wheel_zoom"] = True
 
-        def fit_bounds():
-            """Zooms map to the bounds of the csv"""
-            bbox = [[],[]] #south, west, north, east
-            self.fit_bounds(bbox)
-        #get extreme lat and long from the csv, import into bbox so the map is centered at the right spot
-        #alternatively center the map around the center lat/long?
+        super().__init__(center=center, zoom=zoom, **kwargs)
+
+        if "layers_control" not in kwargs:
+            kwargs["layers_control"] = True
+
+        if kwargs["layers_control"]:
+            self.add_layers_control()
+
+        if "fullscreen_control" not in kwargs:
+            kwargs["fullscreen_control"] = True
+        
+        if kwargs["fullscreen_control"]:
+            self.add_fullscreen_control()
+
+        if "height" in kwargs:
+            self.layout.height = kwargs["height"]
+        else:
+            self.layout.height = "600px"
+
+    def add_search_control(self, position="topleft", **kwargs):
+        """Adds a search control to the map.
+
+        Args:
+            kwargs: Keyword arguments to pass to the search control.
+        """
+        if "url" not in kwargs:
+            kwargs["url"] = 'https://nominatim.openstreetmap.org/search?format=json&q={s}'
+    
+
+        search_control = ipyleaflet.SearchControl(position=position, **kwargs)
+        self.add_control(search_control)
+
+    def add_draw_control(self, **kwargs):
+        """Adds a draw control to the map.
+
+        Args:
+            kwargs: Keyword arguments to pass to the draw control.
+        """
+        draw_control = ipyleaflet.DrawControl(**kwargs)
+
+        draw_control.polyline =  {
+            "shapeOptions": {
+                "color": "#6bc2e5",
+                "weight": 8,
+                "opacity": 1.0
+            }
+        }
+        draw_control.polygon = {
+            "shapeOptions": {
+                "fillColor": "#6be5c3",
+                "color": "#6be5c3",
+                "fillOpacity": 1.0
+            },
+            "drawError": {
+                "color": "#dd253b",
+                "message": "Oups!"
+            },
+            "allowIntersection": False
+        }
+        draw_control.circle = {
+            "shapeOptions": {
+                "fillColor": "#efed69",
+                "color": "#efed69",
+                "fillOpacity": 1.0
+            }
+        }
+        draw_control.rectangle = {
+            "shapeOptions": {
+                "fillColor": "#fca45d",
+                "color": "#fca45d",
+                "fillOpacity": 1.0
+            }
+        }
+
+        self.add_control(draw_control)
+
+    def add_layers_control(self, position='topright'):
+        """Adds a layers control to the map.
+
+        Args:
+            kwargs: Keyword arguments to pass to the layers control.
+        """
+        layers_control = ipyleaflet.LayersControl(position=position)
+        self.add_control(layers_control)
+
+    def add_fullscreen_control(self, position="topleft"):
+        """Adds a fullscreen control to the map.
+
+        Args:
+            kwargs: Keyword arguments to pass to the fullscreen control.
+        """
+        fullscreen_control = ipyleaflet.FullScreenControl(position=position)
+        self.add_control(fullscreen_control)
 
     def add_tile_layer(self, url, name, attribution="", **kwargs):
         """Adds a tile layer to the map.
+
         Args:
             url (str): The URL of the tile layer.
             name (str): The name of the tile layer.
@@ -89,17 +197,29 @@ class Map(ipyleaflet.Map):
         self.add_layer(tile_layer)
 
 
-    def add_basemap(self, basemap):
-        """Change the default basemap"""
-        basemap = eval(f"xyz.{basemap}")
-        url = basemap.build_url()
-        attribution = basemap.attribution
-        self.add_tile_layer(url, name=basemap.name, attribution=attribution)
-                
+    def add_basemap(self, basemap, **kwargs):
+
+        import xyzservices.providers as xyz
+
+        if basemap.lower() == "roadmap":
+            url = 'http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}'
+            self.add_tile_layer(url, name=basemap, **kwargs)
+        elif basemap.lower() == "satellite":
+            url = 'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'
+            self.add_tile_layer(url, name=basemap, **kwargs)
+        else:
+            try:
+                basemap = eval(f"xyz.{basemap}")
+                url = basemap.build_url()
+                attribution = basemap.attribution
+                self.add_tile_layer(url, name=basemap.name, attribution=attribution, **kwargs)
+            except:
+                raise ValueError(f"Basemap '{basemap}' not found.")
 
 
     def add_geojson(self, data, name='GeoJSON', **kwargs):
         """Adds a GeoJSON layer to the map.
+
         Args:
             data (dict): The GeoJSON data.
         """
@@ -114,6 +234,7 @@ class Map(ipyleaflet.Map):
 
     def add_shp(self, data, name='Shapefile', **kwargs):
         """Adds a Shapefile layer to the map.
+
         Args:
             data (str): The path to the Shapefile.
         """
@@ -125,6 +246,7 @@ class Map(ipyleaflet.Map):
 
     def add_geojson(self, data, **kwargs):
         """Adds a GeoJSON layer to the map.
+
         Args:
             data (dict): The GeoJSON data.
             kwargs: Keyword arguments to pass to the GeoJSON layer.
@@ -137,9 +259,3 @@ class Map(ipyleaflet.Map):
 
         geojson = ipyleaflet.GeoJSON(data=data, **kwargs)
         self.add_layer(geojson)
-
-
-
-m = Map()
-m.add_basemap('CartoDB.Positron')
-
