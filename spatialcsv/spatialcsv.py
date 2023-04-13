@@ -244,18 +244,37 @@ class Map(ipyleaflet.Map):
         self.add_geojson(geojson, name=name, **kwargs)
 
 
-    def add_geojson(self, data, **kwargs):
-        """Adds a GeoJSON layer to the map.
+    def add_geodf(self, data, name='GeoDataFrame', **kwargs)
+        """Adds a GeoDataFrame to the map
+        
+        Args:
+            data: geodataframe instance
+        """
+        geodf = ipyleaflet.GeoData(data=data, name=name, **kwargs)
+        self.add_layer(geodf)
+
+
+    def add_vector(self, data, name, **kwarags):
+        """Adds a vector layer to the map.
+        Can be GeoJson, shapefile, GeoDataFrame, etc
 
         Args:
-            data (dict): The GeoJSON data.
-            kwargs: Keyword arguments to pass to the GeoJSON layer.
+            data: the vector data
+            name: the type of data. example: 'GeoJson', 'Shapefile', 'GeoDataFrame'
+            kwargs: Keyword arguments to pass to the layer.
         """
-        import json
+        if name == "GeoJson":
+            self.add_geojson(self, data, name, **kwargs)
+        elif name == "Shapefile":
+            self.add_shp(self, data, name, **kwargs)
+        elif name == "GeoDataFrame":
+            self.add_geodf(self, data, name, **kwargs)
+        else:
+            print("This type of vector is not supported yet.")
+        
 
-        if isinstance(data, str):
-            with open(data, "r") as f:
-                data = json.load(f)
 
-        geojson = ipyleaflet.GeoJSON(data=data, **kwargs)
-        self.add_layer(geojson)
+
+
+
+    
