@@ -305,18 +305,18 @@ class Map(ipyleaflet.Map):
             bbox = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]]
             self.fit_bounds(bbox)
 
-    def add_image(self, url, w=250, h=250):
+    def add_image(self, path, w=250, h=250):
         """Adds a small image (like your logo) to the bottom right of the map
         Args:
-        url (str): the URL of the image
+        file (str): the filepath of the image
         w (int) : width of the image (defaults 250 px)
         h (int) : height of the image (defaults 250 px)
         """
         import ipywidgets as widgets
 
-        file = open(url, "rb")
+        file = open(path, "rb")
         image = file.read()
-        widgets.Image(
+        i = widgets.Image(
             value=image,
             format='png',
             width=w,
@@ -327,4 +327,4 @@ class Map(ipyleaflet.Map):
         output_control = ipyleaflet.WidgetControl(widget=ouptut_widget, position='bottomright')
         self.add_control(output_control)
         with output_widget:
-            display(image)
+            display(i)
