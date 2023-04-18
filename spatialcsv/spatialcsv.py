@@ -312,6 +312,8 @@ class Map(ipyleaflet.Map):
         w (int) : width of the image (defaults 250 px)
         h (int) : height of the image (defaults 250 px)
         """
+        import ipywidgets as widgets
+
         file = open(url, "rb")
         image = file.read()
         widgets.Image(
