@@ -305,9 +305,9 @@ class Map(ipyleaflet.Map):
             bbox = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]]
             self.fit_bounds(bbox)
 
-   def add_image(self, url, w=250, h=250):
-       """Adds a small image (like your logo) to the bottom right of the map
-       Args:
+    def add_image(self, url, w=250, h=250):
+        """Adds a small image (like your logo) to the bottom right of the map
+        Args:
         url (str): the URL of the image
         w (int) : width of the image (defaults 250 px)
         h (int) : height of the image (defaults 250 px)

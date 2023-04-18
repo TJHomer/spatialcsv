@@ -49,6 +49,8 @@ nav:
           - examples/add_csv.ipynb
           - examples/folium.ipynb
           - examples/vectors.ipynb
+          - examples/rasters.ipynb
+          - examples/image.ipynb
     - Contributing: contributing.md
     - FAQ: faq.md
     - Changelog: changelog.md
