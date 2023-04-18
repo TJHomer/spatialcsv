@@ -2,6 +2,6 @@
 
 __author__ = """Tracy Homer"""
 __email__ = 'thomer@mac.com'
-__version__ = '0.0.8'
+__version__ = '0.0.9'
 
 from .spatialcsv import *
