@@ -272,7 +272,40 @@ class Map(ipyleaflet.Map):
         else:
             print("This type of vector is not supported yet.")
         
+    def add_raster(self, url, name='Raster', fit_bounds=True, **kwargs):
+        """Adds a raster layer to the map.
+        Args:
+            url (str): The URL of the raster layer.
+            name (str, optional): The name of the raster layer. Defaults to 'Raster'.
+            fit_bounds (bool, optional): Whether to fit the map bounds to the raster layer. Defaults to True.
+        """
+        import httpx
 
+        titiler_endpoint = "https://titiler.xyz"
+
+        r = httpx.get(
+            f"{titiler_endpoint}/cog/info",
+            params = {
+                "url": url,
+            }
+        ).json()
+
+        bounds = r["bounds"]
+
+        r = httpx.get(
+            f"{titiler_endpoint}/cog/tilejson.json",
+            params = {
+                "url": url,
+            }
+        ).json()
+
+        tile = r["tiles"][0]
+
+        self.add_tile_layer(url=tile, name=name, **kwargs)
+
+        if fit_bounds:
+            bbox = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]]
+            self.fit_bounds(bbox)
 
 
 
