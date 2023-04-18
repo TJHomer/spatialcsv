@@ -76,8 +76,6 @@ class Locations:
 
 
 
-l = Locations('/home/thomer/School/Software_Design_GEOG422/Repo/spatialcsv/spatialcsv/us-state-capitals.csv', 'latitude', 'longitude')
-l.check_lat_long()
 
 class Map(ipyleaflet.Map):
     
@@ -244,7 +242,7 @@ class Map(ipyleaflet.Map):
         self.add_geojson(geojson, name=name, **kwargs)
 
 
-    def add_geodf(self, data, name='GeoDataFrame', **kwargs)
+    def add_geodf(self, data, name='GeoDataFrame', **kwargs):
         """Adds a GeoDataFrame to the map
         
         Args:
@@ -306,8 +304,5 @@ class Map(ipyleaflet.Map):
         if fit_bounds:
             bbox = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]]
             self.fit_bounds(bbox)
-
-
-
 
     
