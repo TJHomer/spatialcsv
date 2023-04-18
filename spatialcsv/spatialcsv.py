@@ -323,3 +323,8 @@ class Map(ipyleaflet.Map):
             height=h,
         )
         
+        output_widget = widgets.Output()
+        output_control = ipyleaflet.WidgetControl(widget=ouptut_widget, position='bottomright')
+        self.add_control(output_control)
+        with output_widget:
+            display(image)
