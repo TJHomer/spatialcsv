@@ -3,6 +3,7 @@ import os
 import csv
 import ipyleaflet
 import xyzservices.providers as xyz
+import ipywidgets as widgets
 
 
 class Locations:
@@ -312,7 +313,6 @@ class Map(ipyleaflet.Map):
         w (int) : width of the image (defaults 250 px)
         h (int) : height of the image (defaults 250 px)
         """
-        import ipywidgets as widgets
 
         file = open(path, "rb")
         image = file.read()
@@ -328,3 +328,48 @@ class Map(ipyleaflet.Map):
         self.add_control(output_control)
         with output_widget:
             display(i)
+
+
+
+    self.dropdown = widgets.Dropdown(
+        options=["Landsat", "Sentinel", "MODIS"],
+        value=None,
+        description="Satellite:",
+        style={"description_width": "initial"},
+        layout=widgets.Layout(width="250px")
+    )  
+    self.btns = widgets.ToggleButtons(
+        value=None,
+        options=["Apply", "Reset", "Close"],
+        button_style="primary",
+    )
+    self.btns.style.button_width = "80px"
+
+    self.output = widgets.Output()
+
+    self.box = widgets.VBox([dropdown, btns, output])
+    
+
+
+
+    def dropdown_change(change):
+        if change['new']:
+            with output:
+                output.clear_output()
+                print(change['new'])
+
+    
+
+    def button_click(change):
+        with output:
+            output.clear_output()
+            if change['new'] == "Apply":
+                if dropdown.value is None:
+                    print("Please select a satellite from the dropdown list.")
+                else:
+                    print(f"You selected {dropdown.value}")
+            elif change['new'] == 'Reset':
+                dropdown.value = None
+            else:
+                box.close()
+
