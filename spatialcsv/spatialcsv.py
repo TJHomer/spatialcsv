@@ -331,23 +331,23 @@ class Map(ipyleaflet.Map):
 
 
 
-    self.dropdown = widgets.Dropdown(
+    dropdown = widgets.Dropdown(
         options=["Landsat", "Sentinel", "MODIS"],
         value=None,
         description="Satellite:",
         style={"description_width": "initial"},
         layout=widgets.Layout(width="250px")
     )  
-    self.btns = widgets.ToggleButtons(
+    btns = widgets.ToggleButtons(
         value=None,
         options=["Apply", "Reset", "Close"],
         button_style="primary",
     )
-    self.btns.style.button_width = "80px"
+    btns.style.button_width = "80px"
 
-    self.output = widgets.Output()
+    output = widgets.Output()
 
-    self.box = widgets.VBox([dropdown, btns, output])
+    box = widgets.VBox([dropdown, btns, output])
     
 
 
