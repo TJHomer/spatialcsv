@@ -160,7 +160,7 @@ class Map(ipyleaflet.Map):
         }
 
         self.add_control(draw_control)
-
+    
     def add_layers_control(self, position='topright'):
         """Adds a layers control to the map.
 
@@ -174,8 +174,8 @@ class Map(ipyleaflet.Map):
         """Adds a fullscreen control to the map.
 
         Args:
-            kwargs: Keyword arguments to pass to the fullscreen control.
-        """
+           kwargs: Keyword arguments to pass to the fullscreen control.
+       """
         fullscreen_control = ipyleaflet.FullScreenControl(position=position)
         self.add_control(fullscreen_control)
 
@@ -263,9 +263,9 @@ class Map(ipyleaflet.Map):
             kwargs: Keyword arguments to pass to the layer.
         """
         if name == "GeoJson":
-            self.add_geojson(self, data, name, **kwargs)
+            self.add_geojson(data, name)
         elif name == "Shapefile":
-            self.add_shp(self, data, name, **kwargs)
+            self.add_shp(data, name)
         elif name == "GeoDataFrame":
             self.add_geodf(self, data, name, **kwargs)
         else:
@@ -330,46 +330,26 @@ class Map(ipyleaflet.Map):
             display(i)
 
 
+    def add_toolbar(self):
+        basemap = widgets.Dropdown(
+            options=['ROADMAP', 'SATELLITE',],
+            value=None,
+            description='Basemap:',
+            style={'description_width': 'initial'},
+            layout=widgets.Layout(width='250px')
+        )
 
-    dropdown = widgets.Dropdown(
-        options=["Landsat", "Sentinel", "MODIS"],
-        value=None,
-        description="Satellite:",
-        style={"description_width": "initial"},
-        layout=widgets.Layout(width="250px")
-    )  
-    btns = widgets.ToggleButtons(
-        value=None,
-        options=["Apply", "Reset", "Close"],
-        button_style="primary",
-    )
-    btns.style.button_width = "80px"
+        basemap_ctrl = ipyleaflet.WidgetControl(widget=basemap, position='bottomright')
+        self.add_control(basemap_ctrl)
+        def change_basemap(change):
+            if change['new']:
+                self.add_basemap(basemap.value)
 
-    output = widgets.Output()
+        basemap.observe(change_basemap, names='value')
 
-    box = widgets.VBox([dropdown, btns, output])
-    
+        def toolbar_click(b):
+            with b:
+                b.clear_output()
 
-
-
-    def dropdown_change(change):
-        if change['new']:
-            with output:
-                output.clear_output()
-                print(change['new'])
-
-    
-
-    def button_click(change):
-        with output:
-            output.clear_output()
-            if change['new'] == "Apply":
-                if dropdown.value is None:
-                    print("Please select a satellite from the dropdown list.")
-                else:
-                    print(f"You selected {dropdown.value}")
-            elif change['new'] == 'Reset':
-                dropdown.value = None
-            else:
-                box.close()
-
+                if b.icon == 'map':
+                    self.add_control(basemap_ctrl)
