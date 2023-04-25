@@ -58,6 +58,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/TJHomer/spatialcsv',
-    version='0.0.16',
+    version='0.0.17',
     zip_safe=False,
 )
