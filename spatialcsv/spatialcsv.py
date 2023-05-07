@@ -1,4 +1,5 @@
 import pandas as pd
+import csv
 from dms2dec.dms_convert import dms2dec
 from pyproj import Transformer
 
@@ -51,6 +52,7 @@ class Points:
         self.df.dropna(axis=0, how='any', subset=[self.coords[0], self.coords[1]], inplace=True)
         return(self.df)
 
+
     def to_streamlit(self):
         '''
         renames columns so that it can be added to streamlit app
@@ -58,6 +60,7 @@ class Points:
         self.remove_null()
         self.df.rename(columns={self.coords[0]:'lat', self.coords[1]:'lon'}, inplace=True) 
         return(self.df)
+
 
     def to_leafmap(self):
         '''
@@ -136,4 +139,10 @@ class Points:
 	
     
 
-
+def get_cols(data):
+    '''
+    for getting the column header while still in csv format
+    '''
+    df = pd.read_csv(data, header=0, index_col=False)
+    return(list(df.columns))
+    
