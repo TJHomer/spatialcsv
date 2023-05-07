@@ -1,4 +1,4 @@
 pandas
 dms2dec
 pyproj
-ipyleaflet
+leafmap
