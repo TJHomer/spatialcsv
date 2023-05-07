@@ -52,4 +52,3 @@ nav:
     - Report Issues: https://github.com/TJHomer/spatialcsv/issues
     - API Reference:
           - spatialcsv module: spatialcsv.md
-          - spatialfolium module: spatialfolium.md
