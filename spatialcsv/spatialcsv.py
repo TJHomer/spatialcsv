@@ -69,7 +69,7 @@ class Points:
         drops = []
         for item in list(self.df.columns):
             if item not in self.coords and item not in self.tags:
-                self.df.drop(item, 1, inplace=True)
+                self.df.drop(columns=[item], inplace=True)
         return(self.df)
 
 
