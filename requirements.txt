@@ -1,6 +1,3 @@
-folium
-httpx
-leafmap
-ipyleaflet
-ipywidgets
-xyzservices
+pandas
+dms2dec
+pyproj
