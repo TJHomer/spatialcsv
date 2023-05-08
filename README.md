@@ -26,6 +26,8 @@ If using leafmap, you can add the following arguments:
 
 If you don't want to use a web map, but only want to convert all the coordinates, there is also a function updated_csv() that will export it back to an csv file.
 
+A video tutorial can be found here: https://vimeo.com/824586413
+
 ## Credits
 
 This package was created with [Cookiecutter](https://github.com/cookiecutter/cookiecutter) and the [giswqs/pypackage](https://github.com/giswqs/pypackage) project template.
